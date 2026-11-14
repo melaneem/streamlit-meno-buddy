@@ -1,54 +1,192 @@
 import streamlit as st
 from openai import OpenAI
+import math
 
-with st.sidebar:
-    openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
-    "[Get an OpenAI API key](https://platform.openai.com/account/api-keys)"
+APP_TITLE = "Meno Buddy"
+APP_CAPTION = "Help you "
 
-system_prompt = """
-You are a specialist in analyzing sleep patterns for women in menopause.
+MODEL = "gemini-3.8-flash"
+
+SYSTEM_PROMPT = """
+You are an healthcare assistant.
 """
 
-st.title("Meno Buddy")
-st.caption("Sleep and menopause support assistant")
+CHAT_GREETING = "Hi"
 
-if "messages" not in st.session_state:
-    st.session_state.messages = [
-        {"role": "system", "content": system_prompt},
-        {"role": "assistant", "content": "Hi! I'm going to ask you a few questions."},
-    ]
+OPTIONS_4 = {
+    "0": 0,
+    "1": 1,
+    "2": 2,
+    "3": 3,
+    }
 
-for message in st.session_state.messages:
-    if message["role"] == "system":
-        continue
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+OPTIONS_2 = {
+    "Yes": 1,
+    "No": 0,
+    }
 
-prompt = st.chat_input("Ask about your sleep symptoms...")
+INTERCEPT = 0.0
+COEFF = {
+    "age": 0.0369965,
+    "BMI": 0.0337405,
+    "mood_0": -0.727168,
+    "mood_1": 0.727221,
+    "physical_activity_0": 0.198725,
+    "physical_activity_1": -0.198672,
+    "num_hotflush": 0.133809,
+    }
 
-if prompt:
-    if not openai_api_key:
-        st.info("Please add your OpenAI API key to continue.")
-        st.stop()
-
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
-        st.markdown(prompt)
-
-    client = OpenAI(api_key=openai_api_key)
-    stream = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": m["role"], "content": m["content"]}
-            for m in st.session_state.messages
-        ],
-        stream=True,
+client = OpenAI(
+    api_key=st.secrets["GEMINI_API_KEY"],
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
     )
 
-    with st.chat_message("assistant"):
-        response = st.write_stream(stream)
+st.set_page_config(page_title=APP_TITLE, page_icon="💬")
 
-    if isinstance(response, list):
-        response = "".join(str(part) for part in response)
+def predict(answer):
+    contribution = {name: coeff * answer[name] for name, coeff in COEFF.items()}
+    score = INTERCEPT + sum(contribution.values())
+    prob = 1 / (1+math.exp(-score)) #sigmoid function
+    return prob, contribution
 
-    st.session_state.messages.append({"role": "assistant", "content": response})
+with st.sidebar:
+    st.title(APP_TITLE)
+    st.caption(APP_CAPTION)
+    page = st.radio("Menu", ["Fill in the form", "My results", "Summary", "Ask Meno Buddy", "About"],)
+
+# ---------------------------------------------------------------
+
+# Form
+if page == "Fill in the form":
+    st.title("Fill in the form")
+    st.write("【在这里写表单说明】")
+
+    with st.form("my_form"):
+        age = st.number_input("1. [How old are you?]", value=None)
+        st.write("")
+        height = st.number_input("2. [What is your height?]", value=None)
+        st.write("")
+        weight = st.number_input("3. [What is your weight?]", value=None)
+        st.write("")
+        st.write("4. [Over the last two weeks, how often have you been bothered by the following problem?]")
+        mood_1 = st.radio("    Little interst or pleasure in doing things.", list(OPTIONS_4.keys(), index=None))
+        mood_2 = st.radio("    Feeling down, depressed, or hopeless.", list(OPTIONS_4.keys(), index=None))
+        st.write("")
+        physical = st.radio("5. [Are you physically active?]", list(OPTIONS_2.keys(), index=None))
+        st.write("")
+        num_hotflush = st.number_input("6. [Over the past week, how many hot flushes have you had?]", value=None)
+        st.write("")
+
+    if submitted:
+        if age is None or height is None or weight is None or mood_1 is None or mood_2 is None or physical is None or num_hotflush is None:
+            st.warning("Please answer all the questions")
+        else:
+            mood_total = OPTIONS_4[mood_1] + OPTIONS_4[mood_2]
+            mood_flag = 1 if (OPTIONS_4[mood_1] + OPTIONS_4[mood_2]) >= 3 else 0
+            bmi = round(weight / (height**2))
+            st.session_state["answers"] = {
+                "age": age,
+                "BMI": bmi,
+                "mood_0": 1 if mood_flag == 0 else 0,
+                "mood_1": 1 if mood_flag == 1 else 0,
+                "mood_total": mood_total,
+                "physical_activity_0": 1 if physical == 0 else 0,
+                "physical_activity_1": 1 if physical == 1 else 0,
+                "num_hotflush": num_hotflush,
+                }
+
+            st.success("Form submitted. Please view 'My Results'")
+
+# Result
+elif page == "My results":
+    st.title("My results")
+    if "answers" not in st.session_state:
+        st.info("Please fill in the form first")
+    else:
+        answer = st.session_state["answers"]
+        prob, contribution = predict(answer)
+
+        st.metric("Probability of having a bad sleep", f"{prob:.0%}")
+
+        contribution["mood"] = contribution.pop("mood_0") + contribution.pop("mood_1")
+        contribution["physcial_activity") = contribution.pop("physical_activity_0") + contribution.pop("physical_activity_1")
+        st.bar_chart(contribution, horizontal=True)
+
+
+# Summary
+elif page == "Summary":
+    st.title("Summary")
+    st.write("This summary was generated from a self-completed questionnaire to help you describe your symptoms clearly to your doctor and discuss what support may be right for you. It is not a diagnosis.")
+
+    if "answers" not in t.session_state:
+        st.info("Please fill in the form first")
+    else:
+        answer = st.session_state["answers"]
+        prob, contribution = predict(answer)
+        mood_total = answer["mood_total"]
+        mood_note = "above screening shreshold" if mood_total >= 3 else "below the screening threshold"
+        physical_note = "No" if answer["physical_activity_0"] == 1 else "Yes"
+
+        note = st.text_area("What else do you want to inform your doctor?")
+
+        summary = f"""
+**[date]** {datetime.date.today(): %d %B %Y}
+
+### [Background]
+- ** Age: ** {answer["age"]}
+- ** Physically active: ** {physical_note}
+- ** BMI: ** {answer["BMI"]}
+
+### [Related factors]
+- ** Mood (PHQ-2): ** {mood_total}/6, {mood_note}
+- ** Number of hot flushes: ** {answer["num_hotflush"]}
+
+### [Estimated likelihood]
+- **[Result description] :** {prob:.0%} estimated likelihood of poor sleep quality, based on research data (not a diagnosis).
+
+### [Additional notes from you]
+{note if note else "None"}
+
+"""
+    
+
+# Ask Meno Buddy
+elif page == "Ask Meno Buddy":
+    st.title("Ask Meno Buddy")
+
+    if "messages" not in st.session_state:
+        st.session_state.messages = [
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "assistant", "content": CHAT_GREETING},
+        ]
+
+    # History
+    for message in st.session_state.messages:
+        if message["role"] == "system":
+            continue
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+
+    if prompt := st.chat_input("Ask anything"):
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.markdown(prompt)
+
+        stream = client.chat.completions.create(
+            model=MODEL,
+            messages=[
+                {"role": m["role"], "content": m["content"]}
+                for m in st.session_state.messages
+            ],
+            stream=True,
+        )
+
+        with st.chat_message("assistant"):
+            response = st.write_stream(stream)
+        st.session_state.messages.append({"role": "assistant", "content": response})
+
+# About
+elif page == "About":
+    st.title("About")
+    st.write("Source")
+
