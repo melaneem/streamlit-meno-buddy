@@ -77,6 +77,8 @@ if page == "Fill in the form":
         num_hotflush = st.number_input("6. [Over the past week, how many hot flushes have you had?]", value=None)
         st.write("")
 
+        submitted = st.form_submit_button("See my results")
+
     if submitted:
         if age is None or height is None or weight is None or mood_1 is None or mood_2 is None or physical is None or num_hotflush is None:
             st.warning("Please answer all the questions")
@@ -118,7 +120,7 @@ elif page == "Summary":
     st.title("Summary")
     st.write("This summary was generated from a self-completed questionnaire to help you describe your symptoms clearly to your doctor and discuss what support may be right for you. It is not a diagnosis.")
 
-    if "answers" not in t.session_state:
+    if "answers" not in st.session_state:
         st.info("Please fill in the form first")
     else:
         answer = st.session_state["answers"]
@@ -189,3 +191,4 @@ elif page == "Ask Meno Buddy":
 elif page == "About":
     st.title("About")
     st.write("Source")
+
