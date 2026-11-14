@@ -69,10 +69,10 @@ if page == "Fill in the form":
         weight = st.number_input("3. [What is your weight?]", value=None)
         st.write("")
         st.write("4. [Over the last two weeks, how often have you been bothered by the following problem?]")
-        mood_1 = st.radio("    Little interst or pleasure in doing things.", list(OPTIONS_4.keys(), index=None))
-        mood_2 = st.radio("    Feeling down, depressed, or hopeless.", list(OPTIONS_4.keys(), index=None))
+        mood_1 = st.radio("    Little interst or pleasure in doing things.", list(OPTIONS_4.keys()), index=None)
+        mood_2 = st.radio("    Feeling down, depressed, or hopeless.", list(OPTIONS_4.keys()), index=None)
         st.write("")
-        physical = st.radio("5. [Are you physically active?]", list(OPTIONS_2.keys(), index=None))
+        physical = st.radio("5. [Are you physically active?]", list(OPTIONS_2.keys()), index=None)
         st.write("")
         num_hotflush = st.number_input("6. [Over the past week, how many hot flushes have you had?]", value=None)
         st.write("")
@@ -189,4 +189,3 @@ elif page == "Ask Meno Buddy":
 elif page == "About":
     st.title("About")
     st.write("Source")
-
