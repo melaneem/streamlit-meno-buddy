@@ -109,7 +109,7 @@ elif page == "My results":
         st.metric("Probability of having a bad sleep", f"{prob:.0%}")
 
         contribution["mood"] = contribution.pop("mood_0") + contribution.pop("mood_1")
-        contribution["physcial_activity") = contribution.pop("physical_activity_0") + contribution.pop("physical_activity_1")
+        contribution["physcial_activity"] = contribution.pop("physical_activity_0") + contribution.pop("physical_activity_1")
         st.bar_chart(contribution, horizontal=True)
 
 
