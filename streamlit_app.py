@@ -14,13 +14,16 @@ div[data-testid="stMarkdownContainer"] p {font-size: 16px;}
 APP_TITLE = "Meno Buddy"
 APP_CAPTION = "Help you "
 
-MODEL = "gemini-3.8-flash"
+MODEL = "gemini-3.5-flash-lite"
+QUESTION_MODEL = "gemini-3.5-flash-lite"
 
 SYSTEM_PROMPT = """
 You are an healthcare assistant.
 """
 
 CHAT_GREETING = "Hi"
+
+BACKUP_QUESTIONS = ["What does this page show?"]
 
 OPTIONS_4 = {
     "0": 0,
@@ -77,10 +80,92 @@ def predict(answer):
     prob = 1 / (1+math.exp(-score)) #sigmoid function
     return prob, contribution
 
+def go_to_chat(question):
+    st.session_state["pending_question"] = question
+    st.session_state["pending_source"] = st.session_state["page"]
+    st.session_state["page"] = "Ask Meno Buddy"
+
+def ask_buddy(label, question, key):
+    st.button(label, key=key, on_click=go_to_chat, args=(question,))
+
+def send_typed_question(text_key):
+    text = st.session_state[text_key].strip()
+    if text != "":
+        go_to_chat(text)
+        st.session_state[text_key] = ""
+
+@st.cache_data(show_spinner=False)
+def make_questions(page_content):
+    request = (
+        "A user is looking at one page of a health information website for postmenopausal women."
+        "Here is the content of the page: {page_content}."
+        "Suggest 4 short questions (under 10 words each) that this user might want to ask an assistant about what is on this page."
+        "Only suggest questions about general information, not diagnosis or treatment."
+        "Reply with one question per line, no numbering, no extra text."
+    )
+    result = client.chat.completions.create(
+        model=QUESTION_MODEL,
+        messages=[{"role": "user", "content": request}],
+    )
+    lines = result.choices[0].message.content.strip().split("\n")
+
+    questions = []
+    for line in lines:
+        line = line.strip().lstrip("-*0123456789. ").strip('"')
+        if line != "":
+            questions.append(line)
+    if len(questions) == 0:
+        raise ValueError("no questions generated")
+    return questions[:4]
+
+def ask_buddy_panel(page_content, prefix):
+    with st.spinner("Thinking of questions..."):
+        try:
+            questions = make_questions(page_content)
+        except Exception as error:
+            st.warning(f"AI could not generate questions, using backup. Reason: {error}")
+            questions = BACKUP_QUESTIONS
+
+    with st.container(border=True, key=f"buddy_{prefix}"):
+        st.subheader("Ask Meno Buddy about this page")
+
+        left_col, right_col = st.columns(2)
+        for i, question in enumerate(questions):
+            if i % 2 == 0:
+                with left_col:
+                    ask_buddy(question, question, key=f"{prefix}_{i}")
+            else:
+                with right_col:
+                    ask_buddy(question, question, key=f"{prefix}_{i}")
+        text_key = f"{prefix}_text"
+        input_col, button_col = st.columns([5, 1])
+        
+        with input_col:
+            st.text_input(
+                "Your question",
+                key=text_key,
+                placeholder="Or type your own question...",
+                label_visibility="collapsed",
+            )
+        with button_col:
+            st.button(
+                "Ask",
+                key=f"{prefix}_ask",
+                on_click=send_typed_question,
+                args=(text_key,),
+            )
+
+def show_message(message):
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+        source = message.get("source")
+        if source is not None and source != "Ask Meno Buddy":
+            st.caption(f"Sent from a button on {source}")
+
 with st.sidebar:
     st.title(APP_TITLE)
     st.caption(APP_CAPTION)
-    page = st.radio("Menu", ["Fill in the form", "My results", "Summary", "Ask Meno Buddy", "About"],)
+    page = st.radio("Menu", ["Fill in the form", "My results", "Summary", "Ask Meno Buddy", "About"], key="page")
 
 # ---------------------------------------------------------------
 
@@ -88,7 +173,7 @@ with st.sidebar:
 if page == "Fill in the form":
     st.title("Fill in the form")
 
-    with st.form("my_form"):
+    with st.form("Form"):
         age = number_question("1. How old are you?", key="age")
         st.write("")
         height = number_question("2. What is your height in cm?", key="height")
@@ -126,6 +211,9 @@ if page == "Fill in the form":
                 }
 
             st.success("Form submitted. Please view 'My Results'")
+            
+    form_content = "A form with questions about age, height, weight, mood, physical activity and hot flushes"
+    ask_buddy_panel(form_content, "form")
 
 # Result
 elif page == "My results":
@@ -150,6 +238,15 @@ elif page == "My results":
             else:
                 st.write("No single factor stands out in your answers.")
 
+                factor_text = FACTOR_NAMES[top_factor] if contribution[top_factor] > 0 else "none stands out"
+                
+        ask_buddy_panel(
+            f"Results page. Estimated likelihood of poor sleep: {prob:.0%}. "
+            f"Main factor: {factor_text}. "
+            "The page also shows a chart of how each factor affects the result.",
+            "results",
+        )
+
 # Summary
 elif page == "Summary":
     st.title("Summary")
@@ -167,25 +264,34 @@ elif page == "Summary":
         note = st.text_area("What else do you want to inform your doctor?")
 
         summary = f"""
-**[date]** {datetime.date.today(): %d %B %Y}
+        **date** {datetime.date.today(): %d %B %Y}
 
-### [Background]
-- ** Age: ** {answer["age"]}
-- ** Physically active: ** {physical_note}
-- ** BMI: ** {answer["BMI"]}
+        ### Background
+        - **Age:** {answer["age"]}
+        - **Physically active:** {physical_note}
+        - **BMI:** {answer["BMI"]}
+        
+        ### Related factors
+        - **Mood (PHQ-2):** {mood_total}/6, {mood_note}
+        - **Number of hot flushes:** {answer["num_hotflush"]}
+        
+        ### Estimated likelihood
+        - **Result description:** {prob:.0%} estimated likelihood of poor sleep quality, based on research data (not a diagnosis).
+        
+        ### Additional notes from you
+        {note if note else "None"}
+        """
 
-### [Related factors]
-- ** Mood (PHQ-2): ** {mood_total}/6, {mood_note}
-- ** Number of hot flushes: ** {answer["num_hotflush"]}
+        st.markdown(summary)
+        st.download_button("Download summary", data=summary, file_name="meno_buddy_summary.txt",)
 
-### [Estimated likelihood]
-- **[Result description] :** {prob:.0%} estimated likelihood of poor sleep quality, based on research data (not a diagnosis).
-
-### [Additional notes from you]
-{note if note else "None"}
-
-"""
-    
+        ask_buddy_panel(
+            f"Summary page for the user's doctor. Estimated likelihood of poor "
+            f"sleep: {prob:.0%}. Mood score {mood_total}/6 ({mood_note}). "
+            f"Hot flushes in the past week: {answer['num_hotflush']}. "
+            f"Physically active: {physical_note}.",
+            "summary",
+        )
 
 # Ask Meno Buddy
 elif page == "Ask Meno Buddy":
@@ -204,7 +310,11 @@ elif page == "Ask Meno Buddy":
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-    if prompt := st.chat_input("Ask anything"):
+    prompt = st.chat_input("Ask anything")
+    if "pending_question" in st.session_state:
+        prompt = st.session_state.pop("pending_question")
+
+    if prompt:
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
