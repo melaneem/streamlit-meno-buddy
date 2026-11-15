@@ -59,7 +59,6 @@ with st.sidebar:
 # Form
 if page == "Fill in the form":
     st.title("Fill in the form")
-    st.write("【在这里写表单说明】")
 
     with st.form("my_form"):
         age = st.number_input("1. [How old are you?]", value=None)
