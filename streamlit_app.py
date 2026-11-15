@@ -45,6 +45,14 @@ COEFF = {
     "num_hotflush": 0.133809,
     }
 
+FACTOR = {
+    "age": "Age",
+    "BMI": "BMI",
+    "mood": "Mood",
+    "activity": "Physical activity",
+    "num_hotflush": "Number of hot flushes",
+}
+
 client = OpenAI(
     api_key=st.secrets["GEMINI_API_KEY"],
     base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
@@ -83,9 +91,9 @@ if page == "Fill in the form":
     with st.form("my_form"):
         age = number_question("1. How old are you?", key="age")
         st.write("")
-        height = number_question("2. What is your height?", key="height")
+        height = number_question("2. What is your height in cm?", key="height")
         st.write("")
-        weight = number_question("3. What is your weight?", key="weight")
+        weight = number_question("3. What is your weight in kg?", key="weight")
         st.write("")
         st.write("4. Over the last two weeks, how often have you been bothered by the following problem?")
         mood_1 = radio_question("Little interst or pleasure in doing things.", list(OPTIONS_4.keys()), key="mood_1")
@@ -104,15 +112,16 @@ if page == "Fill in the form":
         else:
             mood_total = OPTIONS_4[mood_1] + OPTIONS_4[mood_2]
             mood_flag = 1 if (OPTIONS_4[mood_1] + OPTIONS_4[mood_2]) >= 3 else 0
-            bmi = round(weight / (height**2))
+            physical_activity = OPTIONS_2[physical]
+            bmi = round(weight / ((height/100)**2), 1)
             st.session_state["answers"] = {
                 "age": age,
                 "BMI": bmi,
                 "mood_0": 1 if mood_flag == 0 else 0,
                 "mood_1": 1 if mood_flag == 1 else 0,
                 "mood_total": mood_total,
-                "physical_activity_0": 1 if physical == 0 else 0,
-                "physical_activity_1": 1 if physical == 1 else 0,
+                "physical_activity_0": 1 if physical_activity == 0 else 0,
+                "physical_activity_1": 1 if physical_activity == 1 else 0,
                 "num_hotflush": num_hotflush,
                 }
 
@@ -130,10 +139,16 @@ elif page == "My results":
         st.metric("Probability of having a bad sleep", f"{prob:.0%}")
 
         contribution["mood"] = contribution.pop("mood_0") + contribution.pop("mood_1")
-        contribution["physcial_activity"] = contribution.pop("physical_activity_0") + contribution.pop("physical_activity_1")
+        contribution["physical_activity"] = contribution.pop("physical_activity_0") + contribution.pop("physical_activity_1")
         st.bar_chart(contribution, horizontal=True)
-        st.write(contribution)
 
+        top_factor = max(contribution, key=contribution.get)
+        with st.container(border=True):
+            st.subheader("Main factor: ")
+            if contribution[top_factor] > 0:
+                st.markdown(f"**{FACTOR[top_factor]}**")
+            else:
+                st.write("No single factor stands out in your answers.")
 
 # Summary
 elif page == "Summary":
