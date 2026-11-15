@@ -237,8 +237,7 @@ elif page == "My results":
             else:
                 st.write("No single factor stands out in your answers.")
 
-                factor_text = FACTOR_NAMES[top_factor] if contribution[top_factor] > 0 else "none stands out"
-                
+        factor_text = FACTOR[top_factor] if contribution[top_factor] > 0 else "none stands out"     
         ask_buddy_panel(
             f"Results page. Estimated likelihood of poor sleep: {prob:.0%}. "
             f"Main factor: {factor_text}. "
