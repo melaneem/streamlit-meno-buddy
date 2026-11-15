@@ -34,7 +34,7 @@ OPTIONS_2 = {
     "No": 0,
     }
 
-INTERCEPT = 0.0
+INTERCEPT = -3.21874
 COEFF = {
     "age": 0.0369965,
     "BMI": 0.0337405,
