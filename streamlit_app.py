@@ -97,7 +97,7 @@ def send_typed_question(text_key):
 @st.cache_data(show_spinner=False)
 def make_questions(page_content):
     request = (
-        "A user is looking at one page of a health information website for postmenopausal women."
+        f "A user is looking at one page of a health information website for postmenopausal women."
         "Here is the content of the page: {page_content}."
         "Suggest 4 short questions (under 10 words each) that this user might want to ask an assistant about what is on this page."
         "Only suggest questions about general information, not diagnosis or treatment."
