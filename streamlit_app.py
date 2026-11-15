@@ -93,7 +93,7 @@ if page == "Fill in the form":
         st.write("")
         physical = radio_question("5. Are you physically active?", list(OPTIONS_2.keys()), key="physical")
         st.write("")
-        num_hotflush = number_question("6. Over the past week, how many hot flushes have you had?", value="num_hotflush")
+        num_hotflush = number_question("6. Over the past week, how many hot flushes have you had?", key="num_hotflush")
         st.write("")
 
         submitted = st.form_submit_button("See my results")
