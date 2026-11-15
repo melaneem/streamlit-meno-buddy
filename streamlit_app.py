@@ -1,6 +1,15 @@
 import streamlit as st
 from openai import OpenAI
 import math
+import datetime
+
+st.markdown("""
+<style>
+div[data-testid="stRadio"] label p {font-size: 16px;}
+div[data-testid="stNumberInput"] input {font-size: 16px;}
+div[data-testid="stMarkdownContainer"] p {font-size: 16px;}
+</style>
+""", unsafe_allow_html=True)
 
 APP_TITLE = "Meno Buddy"
 APP_CAPTION = "Help you "
@@ -43,6 +52,17 @@ client = OpenAI(
 
 st.set_page_config(page_title=APP_TITLE, page_icon="💬")
 
+def show_question(text):
+    st.write(text)
+
+def number_question(text, key):
+    show_question(text)
+    return st.number_input(text, value=None, key=key, label_visibility="collapsed")
+
+def radio_question(text, options, key):
+    show_question(text)
+    return st.radio(text, options, index=None, key=key, label_visibility="collapsed")
+
 def predict(answer):
     contribution = {name: coeff * answer[name] for name, coeff in COEFF.items()}
     score = INTERCEPT + sum(contribution.values())
@@ -61,19 +81,19 @@ if page == "Fill in the form":
     st.title("Fill in the form")
 
     with st.form("my_form"):
-        age = st.number_input("1. [How old are you?]", value=None)
+        age = number_question("1. How old are you?", key="age")
         st.write("")
-        height = st.number_input("2. [What is your height?]", value=None)
+        height = number_question("2. What is your height?", key="height")
         st.write("")
-        weight = st.number_input("3. [What is your weight?]", value=None)
+        weight = number_question("3. What is your weight?", key="weight")
         st.write("")
-        st.write("4. [Over the last two weeks, how often have you been bothered by the following problem?]")
-        mood_1 = st.radio("    Little interst or pleasure in doing things.", list(OPTIONS_4.keys()), index=None)
-        mood_2 = st.radio("    Feeling down, depressed, or hopeless.", list(OPTIONS_4.keys()), index=None)
+        st.write("4. Over the last two weeks, how often have you been bothered by the following problem?")
+        mood_1 = radio_question("Little interst or pleasure in doing things.", list(OPTIONS_4.keys()), key="mood_1")
+        mood_2 = radio_question("Feeling down, depressed, or hopeless.", list(OPTIONS_4.keys()), key="mood_2")
         st.write("")
-        physical = st.radio("5. [Are you physically active?]", list(OPTIONS_2.keys()), index=None)
+        physical = radio_question("5. Are you physically active?", list(OPTIONS_2.keys()), key="physical")
         st.write("")
-        num_hotflush = st.number_input("6. [Over the past week, how many hot flushes have you had?]", value=None)
+        num_hotflush = number_question("6. Over the past week, how many hot flushes have you had?", value="num_hotflush")
         st.write("")
 
         submitted = st.form_submit_button("See my results")
@@ -112,6 +132,7 @@ elif page == "My results":
         contribution["mood"] = contribution.pop("mood_0") + contribution.pop("mood_1")
         contribution["physcial_activity"] = contribution.pop("physical_activity_0") + contribution.pop("physical_activity_1")
         st.bar_chart(contribution, horizontal=True)
+        st.write(contribution)
 
 
 # Summary
