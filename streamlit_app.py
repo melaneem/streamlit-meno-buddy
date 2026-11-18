@@ -11,9 +11,14 @@ div[data-testid="stNumberInput"] input {font-size: 16px;}
 div[data-testid="stMarkdownContainer"] p {font-size: 16px;}
 
 section[data-testid="stSidebar"] {background-color: #F0F2F6;}
-[data-testid="stAppViewContainer"] {background-color: #e0fbfc;}
+[data-testid="stAppViewContainer"] {background-color: #eaf2d7;}
 div[data-testid="stVerticalBlockBorderWrapper"] {background-color: #FFFFFF;}
 div[data-testid="stForm"] {background-color: #FFFFFF !important;}
+[class*="st-key-buddy_"] {background-color: #FFFFFF;}
+[class*="st-key-buddy_"] div.stButton > button {background-color: #eaf2d7;}
+.st-key-prob_box,
+.st-key-chart_box,
+.st-key-factor_box {background-color: #FFFFFF;}
 
 </style>
 """, unsafe_allow_html=True)
