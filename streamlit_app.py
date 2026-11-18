@@ -18,7 +18,7 @@ div[data-testid="stForm"] {background-color: #FFFFFF !important;}
     background-color: #FFFFFF;
     border: 1px solid #9d8189;
 }
-[class*="st-key-buddy_"] {background-color: #ffcad4; opacity: 0.8}
+[class*="st-key-buddy_"] {background-color: #f2f2f2;}
 .st-key-prob_box,
 .st-key-chart_box,
 .st-key-factor_box {background-color: #FFFFFF;}
