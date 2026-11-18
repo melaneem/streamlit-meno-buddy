@@ -5,32 +5,16 @@ import datetime
 
 st.markdown("""
 <style>
-:root {
-    --accent: #457b9d;
-    --accent-dark: #1d3557;
-    --accent-soft: #a8dadc;
-}
+
 div[data-testid="stRadio"] label p {font-size: 16px;}
 div[data-testid="stNumberInput"] input {font-size: 16px;}
 div[data-testid="stMarkdownContainer"] p {font-size: 16px;}
 
 section[data-testid="stSidebar"] {background-color: #F0F2F6;}
-[data-testid="stAppViewContainer"] {background-color: #a8dadc;}
+[data-testid="stAppViewContainer"] {background-color: #e0fbfc;}
 div[data-testid="stVerticalBlockBorderWrapper"] {background-color: #FFFFFF;}
 div[data-testid="stForm"] {background-color: #FFFFFF !important;}
-section[data-testid="stSidebar"] div[role="radiogroup"] label {
-    width: 100%;
-    margin: 0;
-    padding: 12px 14px;
-    border-radius: 8px;
-    cursor: pointer;
-}
 
-section[data-testid="stSidebar"] div[role="radiogroup"] label > div:first-child {display: none;}
-section[data-testid="stSidebar"] div[role="radiogroup"] label:hover {background: rgba(0, 0, 0, 0.05);}
-section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input:checked) {background: var(--accent-soft);}
-section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input:checked) p {color: var(--accent-dark); font-weight: 600;}
-}
 </style>
 """, unsafe_allow_html=True)
 
