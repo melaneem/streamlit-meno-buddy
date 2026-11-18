@@ -11,11 +11,13 @@ div[data-testid="stNumberInput"] input {font-size: 16px;}
 div[data-testid="stMarkdownContainer"] p {font-size: 16px;}
 
 section[data-testid="stSidebar"] {background-color: #FFFFFF;}
-[data-testid="stAppViewContainer"] {background-color: #eaf2d7;}
+[data-testid="stAppViewContainer"] {background-color: #d8e2dc;}
 div[data-testid="stVerticalBlockBorderWrapper"] {background-color: #FFFFFF;}
 div[data-testid="stForm"] {background-color: #FFFFFF !important;}
-[class*="st-key-buddy_"] {background-color: #FFFFFF;}
-[class*="st-key-buddy_"] div.stButton > button {background-color: #feeac7;}
+[class*="st-key-buddy_"] div.stButton > button {
+    background-color: #FFFFFF;
+    border: 1px solid #9d8189;
+}
 .st-key-prob_box,
 .st-key-chart_box,
 .st-key-factor_box {background-color: #FFFFFF;}
