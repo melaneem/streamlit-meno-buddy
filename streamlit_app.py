@@ -246,8 +246,8 @@ elif page == "My results":
                         f"color: #9d8189;'>{prob:.0%}</div>",
                         unsafe_allow_html=True,
             )
-    st.progress(prob)
-    st.caption("This is an estimate based on research data, not a diagnosis.")
+        st.progress(prob)
+        st.caption("This is an estimate based on research data, not a diagnosis.")
 
         contribution["mood"] = contribution.pop("mood_0") + contribution.pop("mood_1")
         contribution["physical_activity"] = contribution.pop("physical_activity_0") + contribution.pop("physical_activity_1")
