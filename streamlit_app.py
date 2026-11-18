@@ -10,7 +10,7 @@ div[data-testid="stRadio"] label p {font-size: 16px;}
 div[data-testid="stNumberInput"] input {font-size: 16px;}
 div[data-testid="stMarkdownContainer"] p {font-size: 16px;}
 
-section[data-testid="stSidebar"] {background-color: #feeac7;}
+section[data-testid="stSidebar"] {background-color: #FFFFFF;}
 [data-testid="stAppViewContainer"] {background-color: #eaf2d7;}
 div[data-testid="stVerticalBlockBorderWrapper"] {background-color: #FFFFFF;}
 div[data-testid="stForm"] {background-color: #FFFFFF !important;}
