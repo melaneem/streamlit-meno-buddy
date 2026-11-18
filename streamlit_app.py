@@ -14,7 +14,7 @@ div[data-testid="stRadio"] label p {font-size: 16px;}
 div[data-testid="stNumberInput"] input {font-size: 16px;}
 div[data-testid="stMarkdownContainer"] p {font-size: 16px;}
 
-section[data-testid="stSidebar"] {background-color: #d9d9d9;}
+section[data-testid="stSidebar"] {background-color: #F0F2F6;}
 [data-testid="stAppViewContainer"] {background-color: #a8dadc;}
 div[data-testid="stVerticalBlockBorderWrapper"] {background-color: #FFFFFF;}
 div[data-testid="stForm"] {background-color: #FFFFFF !important;}
