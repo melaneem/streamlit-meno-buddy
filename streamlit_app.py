@@ -103,9 +103,6 @@ def predict(answer):
 def go_to_chat(question):
     st.session_state["pending_question"] = question
     st.session_state["pending_source"] = st.session_state["page"]
-    if question is not None:
-        st.session_state["pending_question"] = question
-        st.session_state["pending_source"] = st.session_state["page"]
     st.session_state["page"] = "Ask Meno Buddy"
 
 def ask_buddy(label, question, key):
@@ -190,13 +187,6 @@ with st.sidebar:
     page = st.radio("Menu", ["Fill in the form", "My results", "Summary", "Ask Meno Buddy", "About"], 
                     key="page", label_visibility="collapsed",
     )
-
-    if page != "Ask Meno Buddy":
-        with st.container(border=True, key="sidebar_card"):
-            st.markdown("**Not sure about a word?**")
-            st.caption("Click a question to ask Meno Buddy.")
-            st.button("Open Meno Buddy", key="side_buddy", on_click=go_to_chat)
-
 # ---------------------------------------------------------------
 
 # Form
