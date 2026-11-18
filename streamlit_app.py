@@ -6,15 +6,15 @@ import datetime
 st.markdown("""
 <style>
 :root {
-    --accent: #A288A6;
-    --accent-dark: #1CD21;
-    --accent-soft: #BB9BB0;
+    --accent: #e3d5ca;
+    --accent-dark: #d5bdaf;
+    --accent-soft: #edede9;
 }
 div[data-testid="stRadio"] label p {font-size: 16px;}
 div[data-testid="stNumberInput"] input {font-size: 16px;}
 div[data-testid="stMarkdownContainer"] p {font-size: 16px;}
 
-section[data-testid="stSidebar"] {background-color: #F1E3E4;}
+section[data-testid="stSidebar"] {background-color: #f5ebe0;}
 section[data-testid="stSidebar"] div[role="radiogroup"] label {
     width: 100%;
     margin: 0;
@@ -192,7 +192,7 @@ with st.sidebar:
         with st.container(border=True, key="sidebar_card"):
             st.markdown("**Not sure about a word?**")
             st.caption("Click a question to ask Meno Buddy.")
-            ask_buddy("Open Meno Buddy", key="side_buddy", on_click=open_chat)
+            st.button("Open Meno Buddy", key="side_buddy", on_click=open_chat)
 
 # ---------------------------------------------------------------
 
