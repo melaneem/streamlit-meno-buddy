@@ -14,7 +14,8 @@ div[data-testid="stRadio"] label p {font-size: 16px;}
 div[data-testid="stNumberInput"] input {font-size: 16px;}
 div[data-testid="stMarkdownContainer"] p {font-size: 16px;}
 
-section[data-testid="stSidebar"] {background-color: #fffcf2;}
+section[data-testid="stSidebar"] {background-color: #d9d9d9;}
+[data-testid="stAppViewContainer"] {background-color: #00afb9;}
 section[data-testid="stSidebar"] div[role="radiogroup"] label {
     width: 100%;
     margin: 0;
