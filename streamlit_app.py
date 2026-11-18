@@ -15,7 +15,8 @@ div[data-testid="stNumberInput"] input {font-size: 16px;}
 div[data-testid="stMarkdownContainer"] p {font-size: 16px;}
 
 section[data-testid="stSidebar"] {background-color: #d9d9d9;}
-[data-testid="stAppViewContainer"] {background-color: #00afb9;}
+[data-testid="stAppViewContainer"] {background-color: #a8dadc;}
+div[data-testid="stVerticalBlockBorderWrapper"] {background-color: #FFFFFF;}
 section[data-testid="stSidebar"] div[role="radiogroup"] label {
     width: 100%;
     margin: 0;
