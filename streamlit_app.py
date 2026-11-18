@@ -6,9 +6,9 @@ import datetime
 st.markdown("""
 <style>
 :root {
-    --accent: #e3d5ca;
+    --accent: #f5ebe0;
     --accent-dark: #d5bdaf;
-    --accent-soft: #edede9;
+    --accent-soft: #e3d5ca;
 }
 div[data-testid="stRadio"] label p {font-size: 16px;}
 div[data-testid="stNumberInput"] input {font-size: 16px;}
@@ -103,6 +103,9 @@ def predict(answer):
 def go_to_chat(question):
     st.session_state["pending_question"] = question
     st.session_state["pending_source"] = st.session_state["page"]
+    if question is not None:
+        st.session_state["pending_question"] = question
+        st.session_state["pending_source"] = st.session_state["page"]
     st.session_state["page"] = "Ask Meno Buddy"
 
 def ask_buddy(label, question, key):
@@ -192,7 +195,7 @@ with st.sidebar:
         with st.container(border=True, key="sidebar_card"):
             st.markdown("**Not sure about a word?**")
             st.caption("Click a question to ask Meno Buddy.")
-            st.button("Open Meno Buddy", key="side_buddy", on_click=open_chat)
+            st.button("Open Meno Buddy", key="side_buddy", on_click=go_to_chat)
 
 # ---------------------------------------------------------------
 
