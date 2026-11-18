@@ -16,9 +16,9 @@ div[data-testid="stVerticalBlockBorderWrapper"] {background-color: #FFFFFF;}
 div[data-testid="stForm"] {background-color: #FFFFFF !important;}
 [class*="st-key-buddy_"] div.stButton > button {
     background-color: #FFFFFF;
-    border: 1px solid #9d8189;
+    border: 1px solid #84a98c;
 }
-[class*="st-key-buddy_"] {background-color: #f2f2f2;}
+[class*="st-key-buddy_"] {background-color: #FFFFFF;}
 .st-key-prob_box,
 .st-key-chart_box,
 .st-key-factor_box {background-color: #FFFFFF;}
