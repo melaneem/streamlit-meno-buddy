@@ -5,9 +5,29 @@ import datetime
 
 st.markdown("""
 <style>
+:root {
+    --accent: #A288A6;
+    --accent-dark: #1CD21;
+    --accent-soft: #BB9BB0;
+}
 div[data-testid="stRadio"] label p {font-size: 16px;}
 div[data-testid="stNumberInput"] input {font-size: 16px;}
 div[data-testid="stMarkdownContainer"] p {font-size: 16px;}
+
+section[data-testid="stSidebar"] {background-color: #F1E3E4;}
+section[data-testid="stSidebar"] div[role="radiogroup"] label {
+    width: 100%;
+    margin: 0;
+    padding: 12px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+section[data-testid="stSidebar"] div[role="radiogroup"] label > div:first-child {display: none;}
+section[data-testid="stSidebar"] div[role="radiogroup"] label:hover {background: rgba(0, 0, 0, 0.05);}
+section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input:checked) {background: var(--accent-soft);}
+section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input:checked) p {color: var(--accent-dark); font-weight: 600;}
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -164,7 +184,15 @@ def show_message(message):
 with st.sidebar:
     st.title(APP_TITLE)
     st.caption(APP_CAPTION)
-    page = st.radio("Menu", ["Fill in the form", "My results", "Summary", "Ask Meno Buddy", "About"], key="page")
+    page = st.radio("Menu", ["Fill in the form", "My results", "Summary", "Ask Meno Buddy", "About"], 
+                    key="page", label_visibility="collapsed",
+    )
+
+    if page != "Ask Meno Buddy":
+        with st.container(border=True, key="sidebar_card"):
+            st.markdown("**Not sure about a word?**")
+            st.caption("Click a question to ask Meno Buddy.")
+            ask_buddy("Open Meno Buddy", key="side_buddy", on_click=open_chat)
 
 # ---------------------------------------------------------------
 
