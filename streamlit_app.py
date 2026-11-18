@@ -18,6 +18,7 @@ div[data-testid="stForm"] {background-color: #FFFFFF !important;}
     background-color: #FFFFFF;
     border: 1px solid #9d8189;
 }
+[class*="st-key-buddy_"] {background-color: #ffcad4;}
 .st-key-prob_box,
 .st-key-chart_box,
 .st-key-factor_box {background-color: #FFFFFF;}
@@ -239,6 +240,14 @@ elif page == "My results":
         prob, contribution = predict(answer)
 
         st.metric("Probability of having a bad sleep", f"{prob:.0%}")
+        with st.container(border=True, key="prob_box"):
+            st.markdown("#### Probability of having a bad sleep")
+            st.markdown( f"<div style='font-size:64px; font-weight:700; line-height:1.1;"
+                        f"color: #9d8189;'>{prob:.0%}</div>",
+                        unsafe_allow_html=True,
+            )
+    st.progress(prob)
+    st.caption("This is an estimate based on research data, not a diagnosis.")
 
         contribution["mood"] = contribution.pop("mood_0") + contribution.pop("mood_1")
         contribution["physical_activity"] = contribution.pop("physical_activity_0") + contribution.pop("physical_activity_1")
