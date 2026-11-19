@@ -23,6 +23,9 @@ div[data-testid="stForm"] {background-color: #FFFFFF !important;}
 .st-key-chart_box,
 .st-key-factor_box {background-color: #FFFFFF;}
 
+footer { visibility: hidden; }
+[data-testid="stDecoration"] { display: none; }
+
 </style>
 """, unsafe_allow_html=True)
 
