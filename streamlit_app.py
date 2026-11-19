@@ -180,13 +180,17 @@ def show_message(message):
 with st.sidebar:
     st.title(APP_TITLE)
     st.caption(APP_CAPTION)
-    page = st.radio("Menu", ["Fill in the form", "My results", "Summary", "Ask Meno Buddy", "About"], 
+    page = st.radio("Menu", ["Home", "Fill in the form", "My results", "Summary", "Ask Meno Buddy", "About"], 
                     key="page", label_visibility="collapsed",
     )
 # ---------------------------------------------------------------
+# Home
+if page == "Home":
+    st.title("Home")
+    st.write("Hi!")
 
 # Form
-if page == "Fill in the form":
+elif page == "Fill in the form":
     st.title("Fill in the form")
 
     with st.form("Form"):
