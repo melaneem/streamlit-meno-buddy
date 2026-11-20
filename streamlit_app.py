@@ -178,7 +178,7 @@ def show_message(message):
             st.caption(f"Sent from a button on {source}")
 
 with st.sidebar:
-    st.image("logo.png", width=150)
+    st.image("logo.svg", width=100)
     st.title(APP_TITLE)
     st.caption(APP_CAPTION)
     page = st.radio("Menu", ["Home", "Fill in the form", "My results", "Summary", "Ask Meno Buddy", "About"], 
