@@ -77,7 +77,8 @@ client = OpenAI(
     base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
     )
 
-st.set_page_config(page_title=APP_TITLE, page_icon="💬")
+st.set_page_config(page_title=APP_TITLE, page_icon="logo.png")
+st.logo("logo.png")
 
 def show_question(text):
     st.write(text)
