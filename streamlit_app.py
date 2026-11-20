@@ -78,7 +78,6 @@ client = OpenAI(
     )
 
 st.set_page_config(page_title=APP_TITLE, page_icon="logo.png")
-st.logo("logo.png", size="large")
 
 def show_question(text):
     st.write(text)
@@ -179,6 +178,7 @@ def show_message(message):
             st.caption(f"Sent from a button on {source}")
 
 with st.sidebar:
+    st.image("logo.png", width=150)
     st.title(APP_TITLE)
     st.caption(APP_CAPTION)
     page = st.radio("Menu", ["Home", "Fill in the form", "My results", "Summary", "Ask Meno Buddy", "About"], 
