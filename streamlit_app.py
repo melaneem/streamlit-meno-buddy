@@ -78,7 +78,7 @@ client = OpenAI(
     )
 
 st.set_page_config(page_title=APP_TITLE, page_icon="logo.png")
-st.logo("logo.png")
+st.logo("logo.png", size="large")
 
 def show_question(text):
     st.write(text)
