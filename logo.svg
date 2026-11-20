@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Vespera Icon">
+  <defs>
+          <filter id="dl-cradling-hands-hands-wash" x="-25%" y="-25%" width="150%" height="150%">
+            <feGaussianBlur stdDeviation="4" />
+          </filter>
+          <radialGradient id="dl-cradling-hands-amber-glow" cx="45%" cy="42%" r="60%">
+            <stop offset="0%" stop-color="#FFF6E8" />
+            <stop offset="52%" stop-color="#F2C199" />
+            <stop offset="100%" stop-color="#C8656C" stop-opacity="0.75" />
+          </radialGradient>
+        
+  </defs>
+  
+  
+          <!-- Warm diffused watercolor glow cupped above hands -->
+          <circle cx="60" cy="46" r="24" fill="#F2C199" opacity="0.52" filter="url(#dl-cradling-hands-hands-wash)" />
+          <circle cx="48" cy="56" r="14" fill="#C8656C" opacity="0.32" filter="url(#dl-cradling-hands-hands-wash)" />
+          <!-- Painted crescent moon held gently in midair -->
+          <path d="M62 24C50.5 25.5 42 35.5 42 47.4C42 60.4 52.6 71 65.6 71C72.7 71 79.1 67.8 83.4 62.8C78.2 64.6 72.3 64.5 66.8 62C56.7 57.4 52.2 45.5 56.8 35.4C58.2 32.3 59.9 28.4 62 24Z" fill="url(#dl-cradling-hands-amber-glow)" stroke="#6F223C" stroke-width="1.6" stroke-linejoin="round" />
+          <!-- Left hand organic contour drawing -->
+          <path d="M22 65C24 79 34 90 48 94C53 95.5 57 96 60 96" fill="none" stroke="#6F223C" stroke-width="2.4" stroke-linecap="round" />
+          <path d="M22 65C21 59 24.5 55.5 28.5 58.5C32 61.2 34.5 67.5 39.5 72.5C44.5 77.5 50 79.5 56 80.5C59 81 60.5 83.8 58.5 85.8C55.5 88.5 48.5 88 42.5 84.5" fill="none" stroke="#6F223C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+          <!-- Right hand organic contour drawing -->
+          <path d="M98 65C96 79 86 90 72 94C67 95.5 63 96 60 96" fill="none" stroke="#6F223C" stroke-width="2.4" stroke-linecap="round" />
+          <path d="M98 65C99 59 95.5 55.5 91.5 58.5C88 61.2 85.5 67.5 80.5 72.5C75.5 77.5 70 79.5 64 80.5C61 81 59.5 83.8 61.5 85.8C64.5 88.5 71.5 88 77.5 84.5" fill="none" stroke="#6F223C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+          <!-- Soft drifting chamomile/lotus petals -->
+          <path d="M68 41C71 36 77 35 80 39C77 43 72 44 68 41Z" fill="#C8656C" opacity="0.85" />
+          <path d="M65 48C69 47 73 50 73 54C69 54 66 52 65 48Z" fill="#6F223C" opacity="0.72" />
+          <circle cx="76" cy="29" r="2.2" fill="#6F223C" opacity="0.75" />
+        
+</svg>
